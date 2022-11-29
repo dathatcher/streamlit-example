@@ -5,6 +5,7 @@ EXPOSE 8501
 #RUN pipenv shell
 #RUN pip install pipenv
 #RUN pipenv install --system --deploy
+#RUN pip install pandas openpyxl
 RUN chmod 777 run.sh
 RUN chmod 777 install.sh
 RUN ./install.sh
