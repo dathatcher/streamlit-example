@@ -6,8 +6,13 @@ st.set_page_config(page_title="DevOps",
                    page_icon=":bar_chart:", layout="wide"
 )
 st.title("Research Exchange")
-st.header("Current Software Delivery Performance")
+
+st.header("Software Delivery Performance")
 st.markdown("##")
+
+col1, col2 = st.columns(2)
+col1.metric("", "Throughput", "Trend")
+col2.metric("", "Stability", "Trend")
 
 df1 = pd.read_excel(
        io='testPython.xlsx',
