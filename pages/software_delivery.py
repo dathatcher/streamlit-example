@@ -1,5 +1,5 @@
 import pandas as pd
-import plotly.express as px
+#import plotly.express as px
 import streamlit as st
 
 st.set_page_config(page_title="DevOps",
@@ -81,7 +81,7 @@ st.dataframe(df1)
 st.header("# Deployments")
 st.markdown("""---""")
 
-st.metric("Total Oct. Deployments vs Sep.", "15 Deployments", "-1")
+st.metric("Oct vs Sept Average Weekly Deployments", "4", "0")
 
 df = get_data_from_excel_df()
 st.line_chart(df)
