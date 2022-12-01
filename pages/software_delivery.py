@@ -9,6 +9,7 @@ st.title("Research Exchange")
 
 st.header("Software Delivery Performance")
 st.markdown("##")
+st.sidebar.markdown("# Software Delivery Performance")
 
 df1 = pd.read_excel(
        io='testPython.xlsx',
@@ -76,20 +77,21 @@ def get_data_from_excel_cfr():
 #df_selection = df.query("Freq==@freq")
 
 st.dataframe(df1)
+st.info("'*' Less Than", icon="ℹ️")
 
 #st.title("Deployments (Last 4 Weeks)")
-st.header("# Deployments")
+st.header("Deployment Frequency")
 st.markdown("""---""")
 
-st.metric("Oct vs Sept Average Weekly Deployments", "4", "0")
-
+st.metric("Oct (15) vs Sept (16) median days deployed, each week", "2", "0", delta_color="off")
+st.info('As per DORA, Deploying 3 days or more per week quaifies for deplying daily', icon="ℹ️")
 df = get_data_from_excel_df()
 st.line_chart(df)
 
-st.header("Lead Time for Change (avg days)")
+st.header("Avg Lead Time for Change (days)")
 st.markdown("""---""")
 
-st.metric("Total Oct. avg Lead Time vs Sep", "44 Days", "-9", delta_color="inverse")
+st.metric("Total Oct. avg Lead Time vs Sep", "44 (d)", "-9 (d)", delta_color="inverse")
 
 df2 = get_data_from_excel_lt()
 st.line_chart(df2)
@@ -97,7 +99,7 @@ st.line_chart(df2)
 st.header("MTTR (hours)")
 st.markdown("""---""")
 
-st.metric("Mean Time to Recover Oct. vs Sep", ".05 Hours", ".05", delta_color="inverse")
+st.metric("Mean Time to Recover Oct. vs Sep", ".05 (h)", ".05 (h)", delta_color="inverse")
 
 df3 = get_data_from_excel_mttr()
 st.line_chart(df3)

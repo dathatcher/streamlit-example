@@ -1,1 +1,1 @@
-streamlit run main_page.py --server.enableCORS=false
+streamlit run dora_metrics_model.py --server.enableCORS=false
