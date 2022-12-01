@@ -24,11 +24,9 @@ def get_data_from_excel_df():
         io="testPython.xlsx",
         engine="openpyxl",
         sheet_name="Test",
-       #skiprows=3,
         usecols="D:E",
         nrows=6,
     )
-    
     return df
 
 def get_data_from_excel_lt():
@@ -36,11 +34,9 @@ def get_data_from_excel_lt():
         io="testPython.xlsx",
         engine="openpyxl",
         sheet_name="Test",
-       #skiprows=3,
         usecols="F:G",
         nrows=6,
-    )
-    
+    )  
     return df3
 
 def get_data_from_excel_mttr():
@@ -48,7 +44,6 @@ def get_data_from_excel_mttr():
         io="testPython.xlsx",
         engine="openpyxl",
         sheet_name="Test",
-       #skiprows=3,
         usecols="H:I",
         nrows=6,
     )
