@@ -83,7 +83,7 @@ st.info("'*' Less Than", icon="ℹ️")
 st.header("Deployment Frequency")
 st.markdown("""---""")
 
-st.metric("Oct (15) vs Sept (16) median days deployed, each week", "2", "0", delta_color="off")
+st.metric("Oct(15) vs Sept(16) median days deployed, each week", "2", "0", delta_color="off")
 st.info('As per DORA, Deploying 3 days or more per week quaifies for deplying daily', icon="ℹ️")
 df = get_data_from_excel_df()
 st.line_chart(df)
