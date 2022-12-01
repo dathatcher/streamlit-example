@@ -97,7 +97,7 @@ st.line_chart(df2)
 st.header("MTTR (hours)")
 st.markdown("""---""")
 
-st.metric("Mean Time to Recover Oct. vs Sep", "0%", "-0%", delta_color="off")
+st.metric("Mean Time to Recover Oct. vs Sep", ".05 Hours", ".05", delta_color="inverse")
 
 df3 = get_data_from_excel_mttr()
 st.line_chart(df3)
@@ -105,7 +105,7 @@ st.line_chart(df3)
 st.header("Change Failure Rate")
 st.markdown("""---""")
 
-st.metric("", "Change Failure Rate", "-Last 30 Days", delta_color="off")
+st.metric("Change Failuar Rate Oct. vs Sep", "0%", "-0%", delta_color="off")
 
 df4 = get_data_from_excel_cfr()
 st.line_chart(df4)
