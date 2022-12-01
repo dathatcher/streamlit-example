@@ -48,7 +48,7 @@ def get_data_from_excel_mttr():
         engine="openpyxl",
         sheet_name="Test",
        #skiprows=3,
-        usecols="H",
+        usecols="H:I",
         nrows=6,
     )
     
@@ -60,7 +60,7 @@ def get_data_from_excel_cfr():
         engine="openpyxl",
         sheet_name="Test",
        #skiprows=3,
-        usecols="I",
+        usecols="J:K",
         nrows=6,
     )
     
@@ -77,15 +77,11 @@ def get_data_from_excel_cfr():
 
 st.dataframe(df1)
 
-col3, col4 = st.columns(2)
-col3.metric("", "MTTR", "-Last 30 Days", delta_color="inverse")
-col4.metric("", "Change Failure Rate", "-Last 30 Days", delta_color="off")
-
 #st.title("Deployments (Last 4 Weeks)")
 st.header("# Deployments")
 st.markdown("""---""")
 
-st.metric("Total Oct. Deployments vs Sep.", "15 Deployments", "-1 delta")
+st.metric("Total Oct. Deployments vs Sep.", "15 Deployments", "-1")
 
 df = get_data_from_excel_df()
 st.line_chart(df)
@@ -101,11 +97,15 @@ st.line_chart(df2)
 st.header("MTTR (hours)")
 st.markdown("""---""")
 
+st.metric("Mean Time to Recover Oct. vs Sep", "0%", "-0%", delta_color="off")
+
 df3 = get_data_from_excel_mttr()
 st.line_chart(df3)
 
 st.header("Change Failure Rate")
 st.markdown("""---""")
+
+st.metric("", "Change Failure Rate", "-Last 30 Days", delta_color="off")
 
 df4 = get_data_from_excel_cfr()
 st.line_chart(df4)

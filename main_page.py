@@ -1,4 +1,4 @@
 import streamlit as st
 
-st.markdown("# DevOps Main page")
-st.sidebar.markdown("# DevOps Main page")
+st.markdown("# DevOps Metrics")
+st.sidebar.markdown("# DevOps Metrics")
