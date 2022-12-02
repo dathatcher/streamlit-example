@@ -1,1 +1,1 @@
-streamlit run dora_metrics_model.py --server.enableCORS=false
+streamlit run dora_metrics.py --server.enableCORS=false --theme.backgroundColor="#FDFEFE"
