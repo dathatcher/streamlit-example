@@ -1,32 +1,48 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 
-# Read the CSV file
-df = pd.read_csv("deployments.csv")
+# Read in the CSV file
+@st.cache
+def read_data(file):
+    df = pd.read_csv(file)
+    df['deployment_date'] = pd.to_datetime(df['deployment_date'])
+    return df
 
-# Convert the deployment date column to a datetime object
-df['deployment_date'] = pd.to_datetime(df['deployment_date'])
+# Calculate the deployment frequency according to DORA's method
+def calculate_frequency(df):
+    delta = df['deployment_date'].max() - df['deployment_date'].min()
+    days = delta.days + 1
+    if days >= 365:
+        frequency = 'Yearly'
+    elif days >= 30:
+        frequency = 'Monthly'
+    elif days >= 7:
+        frequency = 'Weekly'
+    else:
+        frequency = 'Daily'
+    return frequency
 
-# Calculate the difference in days between each deployment
-df['days_between_deployments'] = df['deployment_date'].diff().dt.days
+# Plot a trend line of the data
+def plot_trend(df):
+    plt.plot(df['deployment_date'], df['deployments'])
+    plt.xlabel('Date')
+    plt.ylabel('Number of Deployments')
+    plt.title('Trend of Deployments Over Time')
 
-# Create a new column that categorizes the frequency of deployments as either yearly, monthly, weekly, or daily
-df['deployment_frequency'] = np.where(df['days_between_deployments'] > 365, 'Yearly',
-                                      np.where(df['days_between_deployments'] > 30, 'Monthly',
-                                               np.where(df['days_between_deployments'] > 7, 'Weekly', 'Daily')))
+# Main function
+def main():
+    # Select the CSV file to load
+    file = st.file_uploader('Upload a CSV file of deployment data:')
+    if file is not None:
+        df = read_data(file)
 
-# Display the data in a table
-st.table(df)
+        # Calculate the deployment frequency
+        frequency = calculate_frequency(df)
+        st.write(f'The deployment frequency is: {frequency}')
 
-# Calculate the deployment frequency trend over time
-deployment_frequency_trend = df.groupby(['deployment_date']).agg({'deployment_frequency': 'first'})
+        # Plot the trend line
+        st.plotly_chart(plot_trend(df))
 
-# Plot the deployment frequency trend
-plt.plot(deployment_frequency_trend)
-plt.xlabel('Deployment Date')
-plt.ylabel('Deployment Frequency')
-
-# Display the plot
-st.pyplot()
+if __name__ == '__main__':
+    main()
