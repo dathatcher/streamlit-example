@@ -8,6 +8,9 @@ uploaded_file = st.file_uploader("Upload a CSV file", type="csv")
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file, parse_dates=["deployment date"], infer_datetime_format=True)
 
+    # Group the data by week and calculate the number of deployments in each week
+    deployment_counts = df.resample("W", on="deployment date").size()
+
     # Prompt the user to select an application
     application = st.selectbox("Select an application:", df["Application"].unique())
 
@@ -15,7 +18,6 @@ if uploaded_file is not None:
     df = df[df["Application"] == application]
 
     # Calculate the deployment frequency
-    deployment_counts = df["deployment date"].dt.week.value_counts()
     if (deployment_counts >= 3).any():
         frequency = "Daily"
     elif (deployment_counts >= 3).sum() >= 3:
@@ -28,3 +30,6 @@ if uploaded_file is not None:
 
     # Display the selected application's data in a table
     st.dataframe(df)
+
+    # Plot a line chart of the deployment counts by week
+    st.line_chart(deployment_counts)
