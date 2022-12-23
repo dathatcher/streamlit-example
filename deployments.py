@@ -1,35 +1,36 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 
-# Prompt the user to upload a CSV file
-uploaded_file = st.file_uploader("Upload a CSV file", type="csv")
-
-# If a file is uploaded, read it into a Pandas DataFrame
+# Load the CSV file
+uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
 if uploaded_file is not None:
-    df = pd.read_csv(uploaded_file, parse_dates=["deployment date"], infer_datetime_format=True)
+    df = pd.read_csv(uploaded_file)
 
-    # Group the data by week and calculate the number of deployments in each week
-    deployment_counts = df.resample("W", on="deployment date").size()
+    # Prompt the user for the 'Application'
+    application = st.selectbox("Select an application:", df['Application'].unique())
 
-    # Prompt the user to select an application
-    application = st.selectbox("Select an application:", df["Application"].unique())
+    # Filter the dataframe to only include the selected application
+    filtered_df = df[df['Application'] == application]
 
-    # Filter the DataFrame to only include rows for the selected application
-    df = df[df["Application"] == application]
+    # Convert the 'deployment date' values to datetime objects
+    filtered_df['deployment date'] = pd.to_datetime(filtered_df['deployment date'])
 
-    # Calculate the deployment frequency
-    if (deployment_counts >= 3).any():
+    # Calculate the deployment frequency for the selected application
+    deployment_dates = filtered_df['deployment date'].sort_values().reset_index(drop=True)
+    diffs = deployment_dates.diff()
+    median_diff = np.median(diffs)
+
+    # Convert the median difference to days, weeks, or months
+    if median_diff <= pd.Timedelta(days=1):
         frequency = "Daily"
-    elif (deployment_counts >= 3).sum() >= 3:
+    elif median_diff <= pd.Timedelta(weeks=1):
         frequency = "Weekly"
     else:
         frequency = "Monthly"
 
     # Display the frequency in a text field
-    st.write(f"Deployment frequency: {frequency}")
+    st.write(f"The deployment frequency for {application} is {frequency}.")
 
     # Display the selected application's data in a table
-    st.dataframe(df)
-
-    # Plot a line chart of the deployment counts by week
-    st.line_chart(deployment_counts)
+    st.dataframe(filtered_df)
