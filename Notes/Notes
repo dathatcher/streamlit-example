@@ -5,7 +5,7 @@ EXPOSE 8501
 #RUN pipenv shell
 #RUN pip install pipenv
 #RUN pipenv install --system --deploy
-#RUN pip install pandas streamlit openpyxl plotly-express pipenv scikit-learn
+#RUN pip install pandas streamlit openpyxl plotly-express pipenv scikit-learn sklearn matplotlib
 #RUN pip install plotly-express
 RUN chmod 777 run.sh
 RUN chmod 777 install.sh
