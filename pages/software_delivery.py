@@ -72,7 +72,7 @@ def get_data_from_excel_cfr():
 #df_selection = df.query("Freq==@freq")
 
 st.dataframe(df1)
-st.info("'*' Less Than", icon="ℹ️")
+#st.info("'*' Less Than", icon="ℹ️")
 
 #st.title("Deployments (Last 4 Weeks)")
 st.header("Deployment Frequency")
@@ -86,7 +86,7 @@ st.line_chart(df)
 st.header("Avg Lead Time for Change (days)")
 st.markdown("""---""")
 
-st.metric("Total Oct. avg Lead Time vs Sep", "44 (d)", "-9 (d)", delta_color="inverse")
+st.metric("Total Oct. avg Lead Time vs Sep", "22 (d)", "-33 (d)", delta_color="inverse")
 
 df2 = get_data_from_excel_lt()
 st.line_chart(df2)
