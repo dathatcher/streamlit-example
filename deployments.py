@@ -1,36 +1,45 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
+from datetime import datetime, timedelta
 
-# Load the CSV file
+st.title('Deployment Statistics')
+
+# Allow user to upload a CSV file
 uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
+
+# Read the CSV file into a dataframe
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
 
-    # Prompt the user for the 'Application'
-    application = st.selectbox("Select an application:", df['Application'].unique())
+    # Convert 'date_of_first_code_commit' and 'deployment_date' to datetime objects
+    df['date_of_first_code_commit'] = pd.to_datetime(df['date_of_first_code_commit'])
+    df['deployment_date'] = pd.to_datetime(df['deployment_date'])
+
+    # Prompt user to select an application
+    app_name = st.selectbox('Select an application:', df['Application'].unique())
 
     # Filter the dataframe to only include the selected application
-    filtered_df = df[df['Application'] == application]
+    app_df = df[df['Application'] == app_name]
 
-    # Convert the 'deployment date' values to datetime objects
-    filtered_df['deployment date'] = pd.to_datetime(filtered_df['deployment date'])
-
-    # Calculate the deployment frequency for the selected application
-    deployment_dates = filtered_df['deployment date'].sort_values().reset_index(drop=True)
-    diffs = deployment_dates.diff()
-    median_diff = np.median(diffs)
-
-    # Convert the median difference to days, weeks, or months
-    if median_diff <= pd.Timedelta(days=1):
-        frequency = "Daily"
-    elif median_diff <= pd.Timedelta(weeks=1):
-        frequency = "Weekly"
+    # Calculate deployment frequency
+    deployment_counts = app_df['deployment_date'].value_counts()
+    if deployment_counts.max() == 1:
+        deployment_frequency = 'Monthly'
+    elif deployment_counts.max() <= 7:
+        deployment_frequency = 'Weekly'
     else:
-        frequency = "Monthly"
+        deployment_frequency = 'Daily'
 
-    # Display the frequency in a text field
-    st.write(f"The deployment frequency for {application} is {frequency}.")
+    # Calculate lead time
+    lead_times = []
+    for index, row in app_df.iterrows():
+        lead_time = row['deployment_date'] - row['date_of_first_code_commit']
+        lead_times.append(lead_time.days)
+    lead_time = pd.Series(lead_times).median()
 
-    # Display the selected application's data in a table
-    st.dataframe(filtered_df)
+    # Display deployment frequency and lead time
+    st.write(f'Deployment frequency: {deployment_frequency}')
+    st.write(f'Lead time: {lead_time} days')
+
+    # Display selected application's data in a table
+    st.dataframe(app_df)

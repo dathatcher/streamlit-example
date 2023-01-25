@@ -1,0 +1,6 @@
+team_size,average_commit_frequency,average_review_time,deployment_frequency,lead_time
+5,10,24,2,48
+7,14,36,3,72
+3,8,12,1,24
+9,12,48,4,96
+4,6,18,2,36
