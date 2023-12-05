@@ -1,50 +1,57 @@
 import streamlit as st
 import yaml
 
-# Example configuration items
-config_items = [
-    {"name": "Web Server", "description": "Apache or Nginx"},
-    {"name": "Database", "description": "MySQL or PostgreSQL"},
-    {"name": "Cache", "description": "Redis or Memcached"}
-]
+def create_config_model(config_data):
+    config_model = {}
+    for config_item in config_data.get("configuration_items", []):
+        item_name = config_item.get("name", "")
+        config_model[item_name] = {
+            "Type": config_item.get("type", ""),
+            "Description": config_item.get("description", ""),
+            "Location": config_item.get("location", ""),
+            "Owner/Contact": config_item.get("owner_contact", ""),
+            "Status": config_item.get("status", ""),
+            "Lifecycle Information": config_item.get("lifecycle_information", []),
+            "Attributes/Specifications": config_item.get("attributes_specifications", []),
+            "Dependencies": config_item.get("dependencies", []),
+            "Configuration History": config_item.get("configuration_history", ""),
+            "Related Documentation": config_item.get("related_documentation", ""),
+            "Security Compliance": config_item.get("security_compliance", {}).get("nist_controls", []),
+        }
+    return config_model
 
-# Example pipeline stages
-pipeline_stages = [
-    "Plan", "Build", "Deploy to Lower Environments", "Test", "Deploy to Production"
-]
+def display_hierarchy(dependencies, level=0):
+    for dependency in dependencies:
+        st.text("  " * level + f"- {dependency}")
+        if isinstance(dependency, dict):
+            display_hierarchy(dependency, level + 1)
 
-# Example pipeline tools
-pipeline_tools = {
-    "Plan": ["Jira", "Trello"],
-    "Build": ["Jenkins", "TravisCI"],
-    "Deploy to Lower Environments": ["Ansible", "Chef"],
-    "Test": ["JUnit", "TestNG"],
-    "Deploy to Production": ["AWS CodeDeploy", "Heroku"]
-}
+def main():
+    st.title("Configuration Model Viewer")
 
-# Example DAST and SAST tools
-dast_sast_tools = ["OWASP ZAP", "Burp Suite", "Nessus"]
+    # File Upload
+    uploaded_file = st.file_uploader("Upload YAML Configuration File", type=["yaml", "yml"])
 
-# Create a selectbox for the configuration items
-config_item_select = st.selectbox("Select Configuration Item", [item["name"] for item in config_items])
+    if uploaded_file is not None:
+        try:
+            config_data = yaml.safe_load(uploaded_file)
+            config_model = create_config_model(config_data)
 
-# Create checkboxes for pipeline stages and tools
-selected_stages = st.multiselect("Select Pipeline Stages", pipeline_stages)
-pipeline_tools_select = {}
-for stage in selected_stages:
-    pipeline_tools_select[stage] = st.multiselect(f"Select Tools for {stage}", pipeline_tools[stage])
+            # Display Configuration Model
+            for item_name, item_data in config_model.items():
+                st.subheader(f"Configuration Item: {item_name}")
+                for field, value in item_data.items():
+                    st.text(f"{field}: {value}")
 
-# Create checkboxes for DAST and SAST tools
-dast_sast_tools_select = st.multiselect("Select DAST and SAST Tools", dast_sast_tools)
+                dependencies = item_data.get("Dependencies", [])
+                if dependencies:
+                    st.text("Dependencies:")
+                    display_hierarchy(dependencies)
 
-# Convert the selected configuration items, pipeline, and DAST/SAST tools to YAML
-config = {
-    "config_items": config_item_select,
-    "pipeline": pipeline_tools_select,
-    "dast_sast_tools": dast_sast_tools_select
-}
-yaml_config = yaml.dump(config)
+                st.markdown("---")
 
-# Display the YAML configuration
-st.write("### Configuration:")
-st.code(yaml_config, language='yaml')
+        except yaml.YAMLError as e:
+            st.error(f"Error loading YAML file: {e}")
+
+if __name__ == "__main__":
+    main()

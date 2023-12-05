@@ -1,0 +1,31 @@
+configuration_items:
+  - name: <Unique Identifier - May not be needed if stored in source control> 
+    type: <Configuration Item Type>
+    description: <Brief Description>
+    location: <Physical or Logical Location>
+    owner_contact: <Owner or Contact>
+    status: <Current Status>
+    lifecycle_information:
+      - milestone: Installation
+        date: <Installation Date>
+      - milestone: Decommissioning
+        date: <Decommissioning Date>
+    attributes_specifications:
+      - attribute: IP Address
+        value: <IP Address>
+      - attribute: Capacity
+        value: <Capacity>
+      - attribute: Software Version
+        value: <Software Version>
+    dependencies: <List of Dependencies>
+    configuration_history: <History of Changes - This will be handled by version control>
+    related_documentation: <Links to Documentation>
+    security_compliance:
+      nist_controls:
+        - control_id: AC-1
+          control_name: Access Control Policy and Procedures
+          implementation_status: <Status>
+        - control_id: AU-2
+          control_name: Audit Events
+          implementation_status: <Status>
+        # Add other controls as needed
